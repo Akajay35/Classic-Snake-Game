@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classic Snake Game</title>
+    <title>Classic Snake Game - Fixed Scrollbar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -16,11 +16,12 @@
         body {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Changed from center to fix positioning */
             min-height: 100vh;
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            overflow: hidden;
+            background-attachment: fixed;
             padding: 20px;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         
         .container {
@@ -32,6 +33,7 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            margin: 20px auto; /* Added margin for better spacing */
         }
         
         header {
@@ -47,6 +49,10 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
         }
         
         .game-container {
@@ -81,10 +87,12 @@
         
         #score {
             color: #4cff00;
+            font-size: 1.3rem;
         }
         
         #high-score {
             color: #ff6600;
+            font-size: 1.3rem;
         }
         
         #game-canvas {
@@ -100,10 +108,12 @@
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
+            gap: 15px;
         }
         
         button {
-            padding: 12px 25px;
+            flex: 1;
+            padding: 12px 10px;
             border: none;
             border-radius: 8px;
             background: linear-gradient(to right, #ff8c00, #ff6600);
@@ -113,11 +123,16 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
         
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #ff9a1e, #ff7822);
         }
         
         button:active {
@@ -139,6 +154,10 @@
             margin-bottom: 15px;
             text-align: center;
             font-size: 1.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
         
         .instructions ul {
@@ -149,6 +168,15 @@
         .instructions li {
             margin-bottom: 12px;
             line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .instructions li:before {
+            content: "•";
+            color: #ff6600;
+            font-size: 1.2rem;
         }
         
         .keyboard {
@@ -166,6 +194,11 @@
             font-weight: bold;
             color: #ffcc00;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        
+        .key:hover {
+            transform: scale(1.05);
         }
         
         .key i {
@@ -196,6 +229,13 @@
             z-index: 10;
             border: 3px solid #ff6600;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px rgba(255, 100, 100, 0.7); }
+            50% { box-shadow: 0 0 30px rgba(255, 100, 100, 0.9); }
+            100% { box-shadow: 0 0 15px rgba(255, 100, 100, 0.7); }
         }
         
         .game-over h2 {
@@ -214,6 +254,7 @@
             padding: 20px;
         }
         
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             .game-container {
                 flex-direction: column;
@@ -222,10 +263,94 @@
             h1 {
                 font-size: 2.2rem;
             }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff8c00, #ff6600);
+            border-radius: 10px;
+            border: 2px solid rgba(20, 20, 30, 0.7);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #ff9a1e, #ff7822);
+        }
+        
+        /* Fancy snake decorations */
+        .snake-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #4cff00;
+            border-radius: 50%;
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 15s infinite linear;
+        }
+        
+        .snake-decoration:nth-child(2n) {
+            background: #ff6600;
+            width: 25px;
+            height: 25px;
+            animation-duration: 20s;
+        }
+        
+        .snake-decoration:nth-child(3n) {
+            background: #ffcc00;
+            width: 20px;
+            height: 20px;
+            animation-duration: 25s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(360deg);
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Snake decorations in background -->
+    <div class="snake-decoration" style="top: 10%; left: 15%;"></div>
+    <div class="snake-decoration" style="top: 20%; left: 85%;"></div>
+    <div class="snake-decoration" style="top: 40%; left: 5%;"></div>
+    <div class="snake-decoration" style="top: 70%; left: 90%;"></div>
+    <div class="snake-decoration" style="top: 85%; left: 20%;"></div>
+    
     <div class="container">
         <header>
             <h1><i class="fas fa-gamepad"></i> Classic Snake Game</h1>
@@ -253,6 +378,7 @@
                     <li>Each food item increases your score and makes the snake longer</li>
                     <li>Avoid hitting the walls or the snake's own body</li>
                     <li>The game gets faster as your score increases</li>
+                    <li>Try to beat your high score each time!</li>
                 </ul>
                 
                 <div class="keyboard">
@@ -375,27 +501,48 @@
                     if (index === 0) {
                         // Draw head
                         ctx.fillStyle = '#4cff00';
+                        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+                        
+                        // Draw eyes
+                        ctx.fillStyle = '#000';
+                        const eyeSize = 4;
+                        if (direction === 'right') {
+                            ctx.fillRect((segment.x * gridSize) + gridSize - 6, (segment.y * gridSize) + 5, eyeSize, eyeSize);
+                            ctx.fillRect((segment.x * gridSize) + gridSize - 6, (segment.y * gridSize) + gridSize - 9, eyeSize, eyeSize);
+                        } else if (direction === 'left') {
+                            ctx.fillRect((segment.x * gridSize) + 2, (segment.y * gridSize) + 5, eyeSize, eyeSize);
+                            ctx.fillRect((segment.x * gridSize) + 2, (segment.y * gridSize) + gridSize - 9, eyeSize, eyeSize);
+                        } else if (direction === 'up') {
+                            ctx.fillRect((segment.x * gridSize) + 5, (segment.y * gridSize) + 2, eyeSize, eyeSize);
+                            ctx.fillRect((segment.x * gridSize) + gridSize - 9, (segment.y * gridSize) + 2, eyeSize, eyeSize);
+                        } else if (direction === 'down') {
+                            ctx.fillRect((segment.x * gridSize) + 5, (segment.y * gridSize) + gridSize - 6, eyeSize, eyeSize);
+                            ctx.fillRect((segment.x * gridSize) + gridSize - 9, (segment.y * gridSize) + gridSize - 6, eyeSize, eyeSize);
+                        }
                     } else {
                         // Draw body
                         const greenValue = 200 - (index * 5);
                         ctx.fillStyle = `rgb(0, ${Math.max(80, greenValue)}, 0)`;
+                        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+                        
+                        // Add border to segments
+                        ctx.strokeStyle = '#0a0a0a';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
                     }
-                    
-                    ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
-                    
-                    // Add border to segments
-                    ctx.strokeStyle = '#0a0a0a';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
                 });
                 
                 // Draw food
                 ctx.fillStyle = '#ff4444';
-                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+                ctx.beginPath();
+                ctx.arc(food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2, gridSize/2 - 1, 0, Math.PI * 2);
+                ctx.fill();
                 
                 // Add shine to food
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.fillRect(food.x * gridSize + 4, food.y * gridSize + 4, 6, 6);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.beginPath();
+                ctx.arc(food.x * gridSize + gridSize/2 - 3, food.y * gridSize + gridSize/2 - 3, 3, 0, Math.PI * 2);
+                ctx.fill();
             }
             
             // Update game state
@@ -525,6 +672,31 @@
             // Initial draw
             initGame();
             draw();
+            
+            // Add confetti effect on high score
+            function celebrate() {
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'snake-decoration';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = Math.random() * 15 + 5 + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-30px';
+                    confetti.style.animation = `float ${Math.random() * 5 + 3}s linear forwards`;
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }
+            }
+            
+            // Add confetti when high score is beaten
+            if (highScore > 0) {
+                celebrate();
+            }
         });
     </script>
 </body>
